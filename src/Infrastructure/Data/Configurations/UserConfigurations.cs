@@ -10,8 +10,11 @@ public class UserConfigurations : IEntityTypeConfiguration<User>
     {
         builder.ToTable("users");
 
+        builder.HasKey(x => x.Id);
+
         builder.Property(x => x.Name).IsRequired();
         builder.Property(x => x.Email).IsRequired();
+        builder.HasIndex(x => x.Email).IsUnique();
 
         builder.HasMany(x => x.Products)
                 .WithOne(x => x.CreatedUser)
