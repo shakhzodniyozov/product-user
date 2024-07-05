@@ -3,7 +3,7 @@
 public class Product : BaseEntity
 {
     public string Name { get; set; } = null!;
-    public string Description { get; set; } = null!;
+    public string? Description { get; set; }
     public decimal Price { get; set; }
     public User CreatedUser { get; set; } = null!;
     public Guid CreatedUserId { get; set; }
