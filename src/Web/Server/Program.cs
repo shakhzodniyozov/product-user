@@ -1,11 +1,15 @@
 using Application;
 using Infrastructure;
 using Microsoft.OpenApi.Models;
+using Serilog;
+using Server;
+
+Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateLogger();
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddControllers();
+builder.Services.AddControllers(options => options.Filters.Add<ApiExceptionFilterAttribute>());
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddApplicationServices();
 builder.Services.AddHttpContextAccessor();
@@ -40,6 +44,11 @@ builder.Services.AddSwaggerGen(setup =>
 
     setup.AddSecurityRequirement(securityRequirement);
     setup.CustomSchemaIds(s => s.FullName?.Replace("+", "."));
+});
+
+builder.Host.UseSerilog((context, logger) =>
+{
+    logger.WriteTo.Console();
 });
 
 var app = builder.Build();
