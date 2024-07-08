@@ -2,14 +2,13 @@ using Application;
 using Infrastructure;
 using Microsoft.OpenApi.Models;
 using Serilog;
-using Server;
+using WebApi;
 
 Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateLogger();
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddControllers(options => options.Filters.Add<ApiExceptionFilterAttribute>());
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddApplicationServices();
 builder.Services.AddHttpContextAccessor();
@@ -52,6 +51,8 @@ builder.Host.UseSerilog((context, logger) =>
 });
 
 var app = builder.Build();
+app.ConfigureApplication();
+
 
 if (app.Environment.IsDevelopment())
 {
@@ -60,11 +61,7 @@ if (app.Environment.IsDevelopment())
     await app.InitializeDbContext();
 }
 
-app.UseRouting();
-
 app.UseAuthentication();
 app.UseAuthorization();
-
-app.MapControllers();
 
 app.Run();

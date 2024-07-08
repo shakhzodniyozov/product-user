@@ -15,6 +15,13 @@
     <PackageReference Include="Serilog.AspNetCore" Version="8.0.2-dev-00338" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features/Products/Commands/Delete/" />
+    <Folder Include="Features/Users/Commands/Create/" />
+    <Folder Include="Features/Users/Commands/Delete/" />
+    <Folder Include="Features/Users/DTOs/" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>

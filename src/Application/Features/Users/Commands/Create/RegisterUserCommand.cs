@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Domain;
 using FluentResults;
-using FluentValidation;
 using MediatR;
 
 namespace Application;
@@ -11,18 +10,6 @@ public class RegisterUserCommand : IRequest<Result<Guid>>
     public string Name { get; set; } = null!;
     public string Email { get; set; } = null!;
     public string Password { get; set; } = null!;
-}
-
-public class RegisterUserCommandValidator : AbstractValidator<RegisterUserCommand>
-{
-    public RegisterUserCommandValidator()
-    {
-        RuleLevelCascadeMode = CascadeMode.Stop;
-
-        RuleFor(x => x.Name).NotEmpty().WithMessage("Name can not be empty.");
-        RuleFor(x => x.Email).EmailAddress().NotEmpty();
-        RuleFor(x => x.Password).Length(8, 32);
-    }
 }
 
 public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, Result<Guid>>

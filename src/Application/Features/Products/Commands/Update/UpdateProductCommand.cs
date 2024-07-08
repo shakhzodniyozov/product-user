@@ -2,9 +2,7 @@
 using AutoMapper;
 using Domain;
 using FluentResults;
-using FluentValidation;
 using MediatR;
-using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Application;
 
@@ -14,15 +12,6 @@ public class UpdateProductCommand : IRequest<Result<ProductDTO>>
     public string Name { get; set; } = null!;
     public string? Description { get; set; }
     public decimal Price { get; set; }
-}
-
-public class UpdateProductCommandValidator : AbstractValidator<UpdateProductCommand>
-{
-    public UpdateProductCommandValidator()
-    {
-        RuleFor(x => x.Name).NotEmpty().WithMessage("Name can not be empty.");
-        RuleFor(x => x.Price).GreaterThan(0).WithMessage("Price must be greater than zero.");
-    }
 }
 
 public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand, Result<ProductDTO>>

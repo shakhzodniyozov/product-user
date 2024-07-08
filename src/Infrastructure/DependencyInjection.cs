@@ -38,7 +38,7 @@ public static class DependencyInjection
         {
             options.TokenValidationParameters = tokenValidationParameters;
         });
-
+        services.AddAuthorization();
         services.AddUnitOfWork<ApplicationDbContext>();
 
         services.AddScoped<IAuthService, AuthService>();

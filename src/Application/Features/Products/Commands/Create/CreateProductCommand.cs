@@ -14,15 +14,6 @@ public class CreateProductCommand : IRequest<Result<ProductDTO>>
     public decimal Price { get; set; }
 }
 
-public class CreateProductCommandValidator : AbstractValidator<CreateProductCommand>
-{
-    public CreateProductCommandValidator()
-    {
-        RuleFor(x=>x.Name).NotEmpty().WithMessage("Name can not be empty.");
-        RuleFor(x => x.Price).GreaterThan(0).WithMessage("Price must be greater than zero.");
-    }
-}
-
 public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, Result<ProductDTO>>
 {
     private readonly IUnitOfWork uow;
