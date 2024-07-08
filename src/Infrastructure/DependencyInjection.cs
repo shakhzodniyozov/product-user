@@ -42,5 +42,6 @@ public static class DependencyInjection
         services.AddUnitOfWork<ApplicationDbContext>();
 
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<ApplicationDbContextInitializer>();
     }
 }
