@@ -10,5 +10,8 @@ public class MappingProfiles : Profile
         CreateMap<RegisterUserCommand, User>();
         CreateMap<User, UserDTO>();
         CreateMap<UpdateUserCommand, User>();
+        CreateMap<CreateProductCommand, Product>();
+        CreateMap<Product, ProductDTO>();
+        CreateMap<UpdateProductCommand, Product>();
     }
 }
