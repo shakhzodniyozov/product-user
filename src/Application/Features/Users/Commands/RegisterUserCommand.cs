@@ -1,35 +1,46 @@
-﻿using Arch.EntityFrameworkCore.UnitOfWork;
-using AutoMapper;
+﻿using AutoMapper;
 using Domain;
+using FluentResults;
+using FluentValidation;
 using MediatR;
 
 namespace Application;
 
-public class RegisterUserCommand : IRequest
+public class RegisterUserCommand : IRequest<Result<Guid>>
 {
     public string Name { get; set; } = null!;
     public string Email { get; set; } = null!;
     public string Password { get; set; } = null!;
 }
 
-public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand>
+public class RegisterUserCommandValidator : AbstractValidator<RegisterUserCommand>
 {
-    private readonly IUnitOfWork uow;
-    private readonly IRepository<User> userRepo;
+    public RegisterUserCommandValidator()
+    {
+        RuleLevelCascadeMode = CascadeMode.Stop;
+
+        RuleFor(x => x.Name).NotEmpty().WithMessage("Name can not be empty.");
+        RuleFor(x => x.Email).EmailAddress().NotEmpty();
+        RuleFor(x => x.Password).Length(8, 32);
+    }
+}
+
+public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, Result<Guid>>
+{
     private readonly IMapper mapper;
     private readonly IAuthService authService;
 
-    public RegisterUserCommandHandler(IUnitOfWork uow, IMapper mapper, IAuthService authService)
+    public RegisterUserCommandHandler(IMapper mapper, IAuthService authService)
     {
         this.mapper = mapper;
-        this.uow = uow;
         this.authService = authService;
-        userRepo = uow.GetRepository<User>();
     }
 
-    public async Task Handle(RegisterUserCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Guid>> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
     {
         var user = mapper.Map<User>(request);
-        var userId = await authService.Register(user, request.Password);
+        var registerResult = await authService.Register(user, request.Password);
+
+        return registerResult.Value == Guid.Empty ? Result.Fail("Somesthig went wrong while registering user.") : Result.Ok(registerResult.Value);
     }
 }

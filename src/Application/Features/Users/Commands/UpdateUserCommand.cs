@@ -2,6 +2,7 @@
 using AutoMapper;
 using Domain;
 using FluentResults;
+using FluentValidation;
 using MediatR;
 
 namespace Application;
@@ -10,6 +11,17 @@ public class UpdateUserCommand : IRequest<Result<UserDTO>>
 {
     public string Name { get; set; } = null!;
     public string Email { get; set; } = null!;
+}
+
+public class UpdateUserCommandValidator : AbstractValidator<UpdateUserCommand>
+{
+    public UpdateUserCommandValidator()
+    {
+        RuleLevelCascadeMode =  CascadeMode.Stop;
+        
+        RuleFor(x => x.Name).NotEmpty().WithMessage("Name can not be null.");
+        RuleFor(x => x.Email).EmailAddress().NotEmpty();
+    }
 }
 
 public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, Result<UserDTO>>
